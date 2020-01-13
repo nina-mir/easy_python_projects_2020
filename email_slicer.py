@@ -1,20 +1,23 @@
 # code to slice a valid email address
 # into its username and domain name
+# currently this code only checks for @ existence
+# as a check for validity of the email address -- Jan 13, 2020
 
 email = input("Enter a valid email address: ")
 premise = True
-count = 0
 
-while premise:
-    x = validate(email)
 
-    if x > 0:
-        email = input("Enter a valid email address: ")
-    elif x == 0:
-        print('23 x = ', x)
-        name = email.split("@", 2)
-        print(name)
-        premise = False
+def validate_at(email):
+    flag = True
+    try:
+        atIndex = email.index('@')
+        if (atIndex == 0):
+            print('Error @1')
+            return False
+    except ValueError:
+        print('Error @2')
+        return False
+    return flag
 
 
 def validate(email):
@@ -25,14 +28,24 @@ def validate(email):
     if (len(email) == 0):
         x += 1
         print('Error 15 x = ', x)
-    try:
-        atIndex = email.index('@')
-        if (atIndex == 0):
-            print('invalid input! please try again.')
-            x += 1
-            print('19 x = ', x)
-    except ValueError:
-        print('invalid input! please try again.')
+    if not validate_at(email):
         x += 1
-        print('Error 19-0 x = ', x)
     return x
+
+
+while premise:
+    x = validate(email)
+
+    if x > 0:
+        email = input("Enter a valid email address: ")
+    elif x == 0:
+        name = email.split("@", 1)
+        #print(name)
+        if validate_at(name[0]) | validate_at(name[1]):
+            email = input("Enter a valid email address: ")
+        elif (len(name[0]) == 0) | (len(name[1]) == 0):
+            email = input("Enter a valid email address: ")
+        else:
+            print('Valid Email address detected! Yay!')
+            print(name)
+            premise = False
